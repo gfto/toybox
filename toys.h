@@ -17,7 +17,6 @@
 #include <limits.h>
 #include <libgen.h>
 #include <math.h>
-#include <pty.h>
 #include <pwd.h>
 #include <sched.h>
 #include <setjmp.h>
@@ -29,18 +28,35 @@
 #include <strings.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
-#include <sys/mount.h>
 #include <sys/resource.h>
 #include <sys/stat.h>
 #include <sys/statvfs.h>
-#include <sys/sysinfo.h>
-#include <sys/swap.h>
 #include <sys/types.h>
 #include <sys/utsname.h>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <utime.h>
 #include <utmpx.h>
+
+#ifndef __APPLE__
+#include <pty.h>
+#include <sys/swap.h>
+#include <sys/sysinfo.h>
+#include <sys/mount.h>
+#endif
+
+#ifdef __APPLE__
+#include <libgen.h> // for basename
+#include <signal.h> // for kill
+#include <util.h> // for forkpty
+#include <sys/disk.h>
+#define BLKGETSIZE DKIOCGETBLOCKSIZE
+#define RB_POWER_OFF RB_AUTOBOOT
+
+static inline unsigned short bswap_16(unsigned short x) {
+	return (x>>8) | (x<<8);
+}
+#endif
 
 #undef _XOPEN_SOURCE
 #define _XOPEN_SOURCE 600
