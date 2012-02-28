@@ -18,12 +18,12 @@ function newtoys()
 {
   for i in toys/*.c
   do
-    sed -n -e '1,/^config [A-Z]/s/^USE_/&/p' $i || exit 1
+    $SED -n -e '1,/^config [A-Z]/s/^USE_/&/p' $i || exit 1
   done
 }
 echo "NEWTOY(toybox, NULL, 0)" > generated/newtoys.h
-newtoys | sed 's/\(.*TOY(\)\([^,]*\),\(.*\)/\2 \1\2,\3/' | sort -k 1,1 \
-	| sed 's/[^ ]* //'  >> generated/newtoys.h
+newtoys | $SED 's/\(.*TOY(\)\([^,]*\),\(.*\)/\2 \1\2,\3/' | sort -k 1,1 \
+	| $SED 's/[^ ]* //'  >> generated/newtoys.h
 
 # Extract global structure definitions from toys/*.c
 
@@ -31,10 +31,10 @@ function getglobals()
 {
   for i in toys/*.c
   do
-    NAME="$(echo $i | sed 's@toys/\(.*\)\.c@\1@')"
+    NAME="$(echo $i | $SED 's@toys/\(.*\)\.c@\1@')"
 
     echo -e "// $i\n"
-    sed -n -e '/^DEFINE_GLOBALS(/,/^)/b got;b;:got' \
+    $SED -n -e '/^DEFINE_GLOBALS(/,/^)/b got;b;:got' \
         -e 's/^DEFINE_GLOBALS(/struct '"$NAME"'_data {/' \
         -e 's/^)/};/' -e 'p' $i
   done
@@ -45,7 +45,7 @@ GLOBSTRUCT="$(getglobals)"
   echo "$GLOBSTRUCT"
   echo
   echo "extern union global_union {"
-  echo "$GLOBSTRUCT" | sed -n 's/struct \(.*\)_data {/	struct \1_data \1;/p'
+  echo "$GLOBSTRUCT" | $SED -n 's/struct \(.*\)_data {/	struct \1_data \1;/p'
   echo "} this;"
 ) > generated/globals.h
 
@@ -62,7 +62,7 @@ echo "Make generated/config.h from .config."
 # New ones have '\n' so can replace one line with two without all the branches
 # and tedious mucking about with hold space.
 
-sed -n \
+$SED -n \
   -e 's/^# CONFIG_\(.*\) is not set.*/\1/' \
   -e 't notset' \
   -e 's/^CONFIG_\(.*\)=y.*/\1/' \

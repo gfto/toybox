@@ -11,3 +11,4 @@ CFLAGS="$CFLAGS -funsigned-char"
 [ -z "$CC" ] && CC=cc
 [ -z "$STRIP" ] && STRIP=strip
 [ -z "$HOSTCC" ] && HOSTCC=gcc
+[ -z "$SED" ] && SED=sed
