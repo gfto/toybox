@@ -10,6 +10,7 @@ USE_DMESG(NEWTOY(dmesg, "s#n#c", TOYFLAG_BIN))
 
 config DMESG
 	bool "dmesg"
+	depends on !OSX
 	default y
 	help
 	  usage: dmesg [-n level] [-s bufsize] | -c

@@ -10,6 +10,7 @@ USE_SWAPON(NEWTOY(swapon, "<1>1p#<0>32767", TOYFLAG_BIN|TOYFLAG_NEEDROOT))
 
 config SWAPON
 	bool "swapon"
+	depends on !OSX
 	default y
 	help
 	  usage: swapon [-p priority] filename

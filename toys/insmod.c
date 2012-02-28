@@ -10,6 +10,7 @@ USE_INSMOD(NEWTOY(insmod, "<1", TOYFLAG_BIN|TOYFLAG_NEEDROOT))
 
 config INSMOD
 	bool "insmod"
+	depends on LINUX
 	default y
 	help
 	  usage: insmod MODULE [MODULE_OPTIONS]

@@ -10,6 +10,7 @@ USE_UPTIME(NEWTOY(uptime, NULL, TOYFLAG_USR|TOYFLAG_BIN))
 
 config UPTIME
 	bool "uptime"
+	depends on !OSX
 	default y
 	help
 	  usage: uptime

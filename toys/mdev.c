@@ -11,6 +11,7 @@ USE_MDEV(NEWTOY(mdev, "s", TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_UMASK))
 
 config MDEV
 	bool "mdev"
+	depends on LINUX
 	default n
 	help
 	  usage: mdev [-s]

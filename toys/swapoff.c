@@ -10,6 +10,7 @@ USE_SWAPOFF(NEWTOY(swapoff, "<1>1", TOYFLAG_BIN|TOYFLAG_NEEDROOT))
 
 config SWAPOFF
 	bool "swapoff"
+	depends on !OSX
 	default y
 	help
 	  usage: swapoff swapregion

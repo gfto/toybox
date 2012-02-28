@@ -10,6 +10,7 @@ USE_RMMOD(NEWTOY(rmmod, "<1wf", TOYFLAG_BIN|TOYFLAG_NEEDROOT))
 
 config RMMOD
 	bool "rmmod"
+	depends on LINUX
 	default y
 	help
 	  usage: rmmod [-wf] [MODULE]

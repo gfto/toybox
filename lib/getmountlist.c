@@ -6,6 +6,14 @@
 
 #include "toys.h"
 
+#ifdef __APPLE__
+struct mtab_list *getmountlist(int die)
+{
+	if (die) error_exit("%s is unsupported.", __func__);
+	return NULL;
+}
+#else
+
 #include <mntent.h>
 
 char *path_mounts = "/proc/mounts";
@@ -41,3 +49,5 @@ struct mtab_list *getmountlist(int die)
 	}
 	return mtlist;
 }
+
+#endif

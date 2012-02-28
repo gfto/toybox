@@ -10,6 +10,7 @@ USE_FREE(NEWTOY(free, "gmkb", TOYFLAG_USR|TOYFLAG_BIN))
 
 config FREE
 	bool "free"
+	depends on LINUX
 	default y
 	help
 	  usage: free [-bkmg]
