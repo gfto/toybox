@@ -95,7 +95,7 @@ static void make_device(char *path)
 							// Regex to match this device
 							case 3:
 							{
-								char *regex = strndupa(pos, end2-pos);
+								char *regex = strndup(pos, end2-pos);
 								regex_t match;
 								regmatch_t off;
 								int result;
@@ -104,6 +104,7 @@ static void make_device(char *path)
 								xregcomp(&match, regex, REG_EXTENDED);
 								result=regexec(&match, device_name, 1, &off, 0);
 								regfree(&match);
+								free(regex);
 
 								// If not this device, skip rest of line
 								if (result || off.rm_so
@@ -125,7 +126,9 @@ static void make_device(char *path)
 								uid = strtoul(pos,&s2,10);
 								if (s!=s2) {
 									struct passwd *pass;
-									pass = getpwnam(strndupa(pos, s-pos));
+									char *str = strndup(pos, s-pos);
+									pass = getpwnam(str);
+									free(str);
 									if (!pass) goto end_line;
 									uid = pass->pw_uid;
 								}
@@ -134,7 +137,9 @@ static void make_device(char *path)
 								gid = strtoul(s,&s2,10);
 								if (end2!=s2) {
 									struct group *grp;
-									grp = getgrnam(strndupa(s, end2-s));
+									char *str = strndup(s, end2-s);
+									grp = getgrnam(str);
+									free(str);
 									if (!grp) goto end_line;
 									gid = grp->gr_gid;
 								}
