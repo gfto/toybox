@@ -178,7 +178,7 @@ found_device:
 	if (CFG_MDEV_CONF) mode=chown(temp, uid, gid);
 }
 
-static int callback(char *path, struct dirtree *node)
+static int callback(char *path, struct dirtree *node, void *cb_param)
 {
 	// Entries in /sys/class/block aren't char devices, so skip 'em.  (We'll
 	// get block devices out of /sys/block.)
@@ -204,9 +204,9 @@ void mdev_main(void)
 	if (toys.optflags) {
 		xchdir("/sys/class");
 		strcpy(toybuf, "/sys/class");
-		dirtree_read(toybuf, NULL, callback);
+		dirtree_read(toybuf, NULL, NULL, callback);
 		strcpy(toybuf+5, "block");
-		dirtree_read(toybuf, NULL, callback);
+		dirtree_read(toybuf, NULL, NULL, callback);
 	}
 //	if (toys.optflags) {
 //		strcpy(toybuf, "/sys/block");

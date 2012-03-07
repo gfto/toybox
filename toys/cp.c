@@ -128,7 +128,7 @@ void cp_file(char *src, char *dst, struct stat *srcst)
 
 // Callback from dirtree_read() for each file/directory under a source dir.
 
-int cp_node(char *path, struct dirtree *node)
+int cp_node(char *path, struct dirtree *node, void *cb_param)
 {
 	char *s = path+strlen(path);
 	struct dirtree *n;
@@ -209,7 +209,7 @@ void cp_main(void)
 				TT.keep_symlinks++;
 				strncpy(toybuf, src, sizeof(toybuf)-1);
 				toybuf[sizeof(toybuf)-1]=0;
-				dirtree_read(toybuf, NULL, cp_node);
+				dirtree_read(toybuf, NULL, NULL, cp_node);
 			} else error_msg("Skipped dir '%s'", src);
 		} else cp_file(src, dst, &st);
 		if (TT.destisdir) free(dst);

@@ -49,8 +49,8 @@ struct dirtree *dirtree_add_node(char *path)
 // return root of tree.  Otherwise call callback(node) on each hit, free
 // structures after use, and return NULL.
 
-struct dirtree *dirtree_read(char *path, struct dirtree *parent,
-					int (*callback)(char *path, struct dirtree *node))
+struct dirtree *dirtree_read(char *path, struct dirtree *parent, void *cb_param,
+					int (*callback)(char *path, struct dirtree *node, void *param))
 {
 	struct dirtree *dtroot = NULL, *this, **ddt = &dtroot;
 	DIR *dir;
@@ -76,9 +76,9 @@ struct dirtree *dirtree_read(char *path, struct dirtree *parent,
 		if (!this) continue;
 		this->parent = parent;
 		this->depth = parent ? parent->depth + 1 : 1;
-		if (callback) norecurse = callback(path, this);
+		if (callback) norecurse = callback(path, this, cb_param);
 		if (!norecurse && S_ISDIR(this->st.st_mode))
-			this->child = dirtree_read(path, this, callback);
+			this->child = dirtree_read(path, this, cb_param, callback);
 		if (callback) free(this);
 		else ddt = &(this->next);
 		path[len]=0;

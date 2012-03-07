@@ -469,7 +469,7 @@ void mke2fs_main(void)
 
 	if (TT.gendir) {
 		strncpy(toybuf, TT.gendir, sizeof(toybuf));
-		dti = dirtree_read(toybuf, NULL, NULL);
+		dti = dirtree_read(toybuf, NULL, NULL, NULL);
 	} else {
 		dti = xzalloc(sizeof(struct dirtree)+11);
 		strcpy(dti->name, "lost+found");
