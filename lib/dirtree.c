@@ -87,4 +87,36 @@ struct dirtree *dirtree_read(char *path, struct dirtree *parent, void *cb_param,
 	return dtroot;
 }
 
+static int dirtree_node(char *path, struct dirtree *node, void *cb_param)
+{
+	char *s = path + strlen(path);
+	struct dirtree *n = node;
+	int (*callback)(char *path) = cb_param;
 
+	for ( ; ; n = n->parent) {
+		while (s!=path) {
+			if (*(--s) == '/') break;
+		}
+		if (!n) break;
+	}
+	if (s != path) s++;
+
+	callback(s);
+
+	return 0;
+}
+
+void dirtree_for_each(char *path, int (*callback)(char *path))
+{
+	struct stat sb;
+	if (stat(path, &sb) == -1) {
+		perror_msg("%s", path);
+		return;
+	}
+	callback(path);
+	if (S_ISDIR(sb.st_mode)) {
+		strncpy(toybuf, path, sizeof(toybuf) - 1);
+		toybuf[sizeof(toybuf) - 1] = 0;
+		dirtree_read(toybuf, NULL, callback, dirtree_node);
+	}
+}
