@@ -167,8 +167,10 @@ void netcat_main(void)
 
 				// Do we need a tty?
 
+#ifndef __ANDROID__
 				if (toys.optflags&FLAG_t)
 					child = forkpty(&(pollfds[1].fd), NULL, NULL, NULL);
+#endif
 
 				// Do we need to fork and/or redirect for exec?
 

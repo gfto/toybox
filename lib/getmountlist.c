@@ -14,6 +14,36 @@ char *path_mounts = "/proc/mounts";
 // statvfs() information.  This returns a reversed list, which is good for
 // finding overmounts and such.
 
+#ifdef __ANDROID__
+struct mtab_list *getmountlist(int die)
+{
+	FILE *fp;
+	struct mtab_list *mtlist, *mt;
+	struct mntent *me;
+	char evilbuf[2*PATH_MAX];
+
+	mtlist = 0;
+	fp = fopen(path_mounts, "r");
+	while ( (me = getmntent(fp)) ) {
+		mt = xzalloc(sizeof(struct mtab_list) + strlen(me->mnt_fsname) +
+			strlen(me->mnt_dir) + strlen(me->mnt_type) + 3);
+		mt->next = mtlist;
+		// Get information about this filesystem.  Yes, we need both.
+		stat(me->mnt_dir, &(mt->stat));
+		statvfs(me->mnt_dir, &(mt->statvfs));
+		// Remember information from /proc/mounts
+		strcpy(mt->type, me->mnt_type);
+		strcpy(mt->dir, me->mnt_dir);
+		mt->dir = mt->type + strlen(mt->type) + 1;
+		mt->device = mt->dir + strlen(mt->dir) + 1;
+		strcpy(mt->device, me->mnt_fsname);
+		mtlist = mt;
+	}
+
+	return mtlist;
+}
+#else
+
 struct mtab_list *getmountlist(int die)
 {
 	FILE *fp;
@@ -41,3 +71,5 @@ struct mtab_list *getmountlist(int die)
 	}
 	return mtlist;
 }
+
+#endif

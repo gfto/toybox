@@ -17,6 +17,10 @@
 #include <stdio.h>
 #define fdprintf(...) dprintf(__VA_ARGS__)
 
+#ifdef __ANDROID__
+#define statvfs statfs
+#endif
+
 #ifdef __GNUC__
 #define noreturn	__attribute__((noreturn))
 #else

@@ -17,7 +17,6 @@
 #include <limits.h>
 #include <libgen.h>
 #include <math.h>
-#include <pty.h>
 #include <pwd.h>
 #include <sched.h>
 #include <setjmp.h>
@@ -32,15 +31,25 @@
 #include <sys/mount.h>
 #include <sys/resource.h>
 #include <sys/stat.h>
-#include <sys/statvfs.h>
 #include <sys/sysinfo.h>
-#include <sys/swap.h>
 #include <sys/types.h>
 #include <sys/utsname.h>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <utime.h>
+
+#if defined(__linux__) && !defined(__ANDROID__)
+#include <pty.h>
+#include <sys/statvfs.h>
+#include <sys/swap.h>
 #include <utmpx.h>
+#endif
+
+#ifdef __ANDROID__
+#include <sys/statfs.h>
+#define SWAP_FLAG_PREFER 0x8000
+#define SWAP_FLAG_PRIO_SHIFT 0
+#endif
 
 #undef _XOPEN_SOURCE
 #define _XOPEN_SOURCE 600

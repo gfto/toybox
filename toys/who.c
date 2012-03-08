@@ -12,6 +12,7 @@ USE_WHO(NEWTOY(who, NULL, TOYFLAG_BIN))
 
 config WHO
 	bool "who"
+	depends on !ANDROID
 	default n
 	help
 	  usage: who

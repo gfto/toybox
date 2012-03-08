@@ -768,15 +768,18 @@ void crc_init(unsigned int *crc_table, int little_endian)
 
 void terminal_size(unsigned *x, unsigned *y)
 {
-	struct winsize ws;
 	int i;
 
 	//memset(&ws, 0, sizeof(ws));
+#ifndef __ANDROID__
+	struct winsize ws;
 	for (i=0; i<3; i++) {
 		if (ioctl(i, TIOCGWINSZ, &ws)) continue;
 		if (x) *x = ws.ws_col;
 		if (y) *y = ws.ws_row;
 	}
+#endif
+
 	if (x) {
 		char *s = getenv("COLUMNS");
 
