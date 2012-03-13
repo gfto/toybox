@@ -133,3 +133,12 @@ void bunzipStream(int src_fd, int dst_fd);
 
 int sig_to_num(char *pidstr);
 char *num_to_sig(int sig);
+
+#if defined(__APPLE__) || defined(__ANDROID__)
+ssize_t getdelim(char **lineptr, size_t *n, int delim, FILE *stream);
+ssize_t getline(char **lineptr, size_t *n, FILE *stream);
+#endif
+
+#if defined(__APPLE__)
+int clearenv(void);
+#endif
