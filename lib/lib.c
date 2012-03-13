@@ -959,3 +959,17 @@ int clearenv(void) {
 	return 0;
 }
 #endif
+
+#if defined(__ANDROID__)
+int sethostname(const char *name, size_t len) {
+	return syscall(__NR_sethostname, name, len);
+}
+
+int swapoff(const char *path) {
+	return syscall(__NR_swapon, path);
+}
+
+int swapon(const char *path, int swapflags) {
+	return syscall(__NR_swapon, path, swapflags);
+}
+#endif

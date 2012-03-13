@@ -142,3 +142,9 @@ ssize_t getline(char **lineptr, size_t *n, FILE *stream);
 #if defined(__APPLE__)
 int clearenv(void);
 #endif
+
+#if defined(__ANDROID__)
+int sethostname(const char *name, size_t len);
+int swapoff(const char *path);
+int swapon(const char *path, int swapflags);
+#endif

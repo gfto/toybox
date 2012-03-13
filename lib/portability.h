@@ -23,6 +23,10 @@
 #define noreturn
 #endif
 
+#ifdef __ANDROID__
+#include <asm/unistd.h>
+#endif
+
 #ifndef __APPLE__
 #include <byteswap.h>
 #include <endian.h>
