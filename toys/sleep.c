@@ -35,7 +35,7 @@ static unsigned long get_msec(char *param) {
 	if (CFG_TOYBOX_FLOAT) {
 		msec = strtod(*toys.optargs, NULL) * 1000;
 	} else {
-		msec = strtoul(param, NULL, 10);
+		msec = strtoul(param, NULL, 10) * 1000;
 	}
 
 	if (!isdigit(suffix)) {
