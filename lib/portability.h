@@ -9,8 +9,10 @@
 
 #define _FILE_OFFSET_BITS 64
 
+#ifndef __APPLE__
 #define _POSIX_C_SOURCE 200809L
 #define _XOPEN_SOURCE 600
+#endif
 #define _BSD_SOURCE
 #define _SVID_SOURCE
 
