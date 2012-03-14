@@ -28,34 +28,39 @@ config SLEEP_FLOAT
 
 #include "toys.h"
 
+static unsigned long get_msec(char *param) {
+	unsigned long msec;
+	char suffix = param[strlen(param) - 1];
+
+	if (CFG_TOYBOX_FLOAT) {
+		msec = strtod(*toys.optargs, NULL) * 1000;
+	} else {
+		msec = strtoul(param, NULL, 10);
+	}
+
+	if (!isdigit(suffix)) {
+		int imhd[] = { 1, 60, 3600, 86400 };
+		char *mhd = "smhd", *c = strchr(mhd, suffix);
+		if (!c)
+			error_exit("invalid time interval '%s'", param);
+		msec *= imhd[c - mhd];
+	}
+
+	return msec;
+}
+
 void sleep_main(void)
 {
+	char **arg;
+	unsigned long msec = 0;
 
-	if (!CFG_TOYBOX_FLOAT) toys.exitval = sleep(atol(*toys.optargs));
-	else {
-		char *arg;
-		double d = strtod(*toys.optargs, &arg);
-		unsigned long l;
+	for (arg = toys.optargs; *arg; arg++)
+		msec += get_msec(*arg);
 
-		// Parse suffix
-		if (*arg) {
-			int imhd[]={60,3600,86400};
-			char *mhd = "mhd", *c = strchr(mhd, *arg);
-			if (!arg) error_exit("Unknown suffix '%c'", *arg);
-			d *= imhd[c-mhd];
-		}
+	struct timespec tv = {
+		.tv_sec = msec / 1000,
+		.tv_nsec = (msec % 1000) * 1000000
+	};
 
-		// wait through the delay
-		l = (unsigned long)d;
-		d -= l;
-		if (l) toys.exitval = sleep(l);
-		if (!toys.exitval) {
-			unsigned long usec = d * 1000000;
-			struct timespec tv = {
-				.tv_sec = usec / 1000000,
-				.tv_nsec = (usec % 1000000) * 1000
-			};
-			toys.exitval = nanosleep(&tv, NULL);
-		}
-	}
+	toys.exitval = nanosleep(&tv, NULL);
 }
