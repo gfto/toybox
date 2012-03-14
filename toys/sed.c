@@ -57,7 +57,7 @@ void sed_main(void)
 	struct arg_list *test;
 
 	for (test = TT.commands; test; test = test->next)
-		dprintf(2,"command=%s\n",test->arg);
+		fprintf(stderr, "command=%s\n",test->arg);
 
 	printf("Hello world\n");
 }

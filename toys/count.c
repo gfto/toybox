@@ -29,7 +29,7 @@ void count_main(void)
 		if (!len) break;
 		size += len;
 		xwrite(1, toybuf, len);
-		fdprintf(2, "%"PRIu64" bytes\r", size);
+		fprintf(stderr, "%"PRIu64" bytes\r", size);
 	}
-	fdprintf(2,"\n");
+	fprintf(stderr, "\n");
 }
