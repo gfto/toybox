@@ -22,6 +22,42 @@ EOF
   [ $? -eq 0 ] && DEFAULT=y || DEFAULT=n
   rm a.out 2>/dev/null
   echo -e "\tdefault $DEFAULT\n" || return 1
+
+  # Probe if we are building for Linux
+
+  echo -e "config LINUX\n\tbool" || return 1
+  ${CROSS_COMPILE}${CC} -c -xc -o /dev/null - 2>/dev/null << EOF
+#if defined(__linux__)
+#error YES
+#endif
+int main(void) { return 0; }
+EOF
+  [ $? -eq 0 ] && DEFAULT=n || DEFAULT=y
+  echo -e "\tdefault $DEFAULT\n" || return 1
+
+  # Probe if we are building for Android
+
+  echo -e "config ANDROID\n\tbool" || return 1
+  ${CROSS_COMPILE}${CC} -c -xc -o /dev/null - 2>/dev/null << EOF
+#if defined(__ANDROID__)
+#error YES
+#endif
+int main(void) { return 0; }
+EOF
+  [ $? -eq 0 ] && DEFAULT=n || DEFAULT=y
+  echo -e "\tdefault $DEFAULT\n" || return 1
+
+  # Probe if we are building for OS X
+
+  echo -e "config OSX\n\tbool" || return 1
+  ${CROSS_COMPILE}${CC} -c -xc -o /dev/null - 2>/dev/null << EOF
+#if defined(__APPLE__)
+#error YES
+#endif
+int main(void) { return 0; }
+EOF
+  [ $? -eq 0 ] && DEFAULT=n || DEFAULT=y
+  echo -e "\tdefault $DEFAULT\n" || return 1
 }
 
 genconfig()
