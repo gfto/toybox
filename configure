@@ -13,6 +13,10 @@ if [ "$(uname -s)" = "Linux" ]
 then
 	[ -z "$LDFLAGS" ] && LDFLAGS="-Wl,--as-needed,-lutil,--no-as-needed -Wl,--gc-sections"
 fi
+if [ "$(uname -s)" = "Darwin" ]
+then
+	[ -z "$SED" ] && SED=gsed
+fi
 [ -z "$OPTIMIZE" ] && OPTIMIZE="-Os -ffunction-sections -fdata-sections"
 [ -z "$HOSTCC" ] && HOSTCC=gcc
 [ -z "$SED" ] && SED=sed
