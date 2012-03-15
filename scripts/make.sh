@@ -92,7 +92,7 @@ $SED -n \
 # 4) Remove toybox itself from the list (as that indicates global symbols).
 # 5) Add "toys/" prefix and ".c" suffix.
 
-TOYFILES=$(cat .config | sed -nre 's/^CONFIG_(.*)=y/\1/;t skip;b;:skip;s/_.*//;p' | sort -u | tr A-Z a-z | grep -v '^toybox$' | sed 's@\(.*\)@toys/\1.c@' )
+TOYFILES=$(cat .config | $SED -nre 's/^CONFIG_(.*)=y/\1/;t skip;b;:skip;s/_.*//;p' | sort -u | tr A-Z a-z | grep -vE '^(toybox|linux|android|osx)$' | $SED 's@\(.*\)@toys/\1.c@' )
 
 echo "Compile toybox..."
 
