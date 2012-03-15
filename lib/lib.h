@@ -137,6 +137,16 @@ char *num_to_sig(int sig);
 #if defined(__APPLE__) || defined(__ANDROID__)
 ssize_t getdelim(char **lineptr, size_t *n, int delim, FILE *stream);
 ssize_t getline(char **lineptr, size_t *n, FILE *stream);
+
+#ifndef dprintf
+#define dprintf(__fd, ...) \
+	do { \
+		char *__new = xmsprintf(__VA_ARGS__); \
+		write(__fd, __new, strlen(__new)); \
+		free(__new); \
+	} while(0)
+#endif
+
 #endif
 
 #if defined(__APPLE__)
