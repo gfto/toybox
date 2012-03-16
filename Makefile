@@ -17,6 +17,9 @@ generated/Config.in: toys/*.c scripts/genconfig.sh
 
 HOSTCC?=cc
 
+.config:
+	$(MAKE) defconfig
+
 # Development targets
 baseline: toybox_unstripped
 	@cp toybox_unstripped toybox_old
@@ -42,10 +45,10 @@ uninstall:
 clean::
 	rm -rf toybox toybox_unstripped generated/config.h generated/Config.in \
 		generated/newtoys.h generated/globals.h instlist testdir \
-		generated/Config.probed
+		generated/Config.probed generated/help.h generated/build_files
 
 distclean: clean
-	rm -f toybox_old .config* generated/help.h
+	rm -f toybox_old .config* generated/genconf
 
 test: tests
 

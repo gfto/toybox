@@ -34,4 +34,12 @@ genconfig()
 }
 
 probeconfig > generated/Config.probed || rm generated/Config.probed
-genconfig > generated/Config.in || rm generated/Config.in
+
+if [ ! -x generated/genconf ]
+then
+  echo "Building generated/genconf"
+  $HOSTCC -ggdb -Wall -Wextra -Wno-sign-compare -I . -o generated/genconf scripts/genconf.c || exit 1
+fi
+
+echo "Extract configuration information from toys/*.c files..."
+generated/genconf toys/*.c || exit 1
