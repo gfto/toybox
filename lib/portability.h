@@ -32,6 +32,10 @@ char *strptime(const char *buf, const char *format, struct tm *tm);
 #define noreturn
 #endif
 
+#ifdef __ANDROID__
+#include <asm/unistd.h>
+#endif
+
 #ifndef __APPLE__
 #include <byteswap.h>
 #include <endian.h>
@@ -86,4 +90,10 @@ int clearenv(void);
 #if defined(__APPLE__) || defined(__ANDROID__)
 ssize_t getdelim(char **lineptr, size_t *n, int delim, FILE *stream);
 ssize_t getline(char **lineptr, size_t *n, FILE *stream);
+#endif
+
+#if defined(__ANDROID__)
+int sethostname(const char *name, size_t len);
+int swapoff(const char *path);
+int swapon(const char *path, int swapflags);
 #endif
