@@ -43,22 +43,12 @@ static int do_chmod(const char *path) {
 	return ret;
 }
 
-// Copied from toys/cp.c:cp_node()
-int chmod_node(char *path, struct dirtree *node)
+int chmod_node(struct dirtree *node)
 {
-	char *s = path + strlen(path);
-	struct dirtree *n = node;
-
-	for ( ; ; n = n->parent) {
-		while (s!=path) {
-			if (*(--s) == '/') break;
-		}
-		if (!n) break;
-	}
-	if (s != path) s++;
-
-	do_chmod(s);
-
+	int len = 0;
+	char *path = dirtree_path(node, &len);
+	do_chmod(path);
+	free(path);
 	return 0;
 }
 
@@ -80,7 +70,7 @@ void chmod_main(void)
 			if (S_ISDIR(sb.st_mode)) {
 				strncpy(toybuf, *s, sizeof(toybuf) - 1);
 				toybuf[sizeof(toybuf) - 1] = 0;
-				dirtree_read(toybuf, NULL, chmod_node);
+				dirtree_read(toybuf, chmod_node);
 			}
 		}
 	} else {

@@ -51,22 +51,12 @@ static int do_chown(const char *path) {
 	return ret;
 }
 
-// Copied from toys/cp.c:cp_node()
-int chown_node(char *path, struct dirtree *node)
+int chown_node(struct dirtree *node)
 {
-	char *s = path + strlen(path);
-	struct dirtree *n = node;
-
-	for ( ; ; n = n->parent) {
-		while (s!=path) {
-			if (*(--s) == '/') break;
-		}
-		if (!n) break;
-	}
-	if (s != path) s++;
-
-	do_chown(s);
-
+	int len = 0;
+	char *path = dirtree_path(node, &len);
+	do_chown(path);
+	free(path);
 	return 0;
 }
 
@@ -125,7 +115,7 @@ void chown_main(void)
 			if (S_ISDIR(sb.st_mode)) {
 				strncpy(toybuf, *s, sizeof(toybuf) - 1);
 				toybuf[sizeof(toybuf) - 1] = 0;
-				dirtree_read(toybuf, NULL, chown_node);
+				dirtree_read(toybuf, chown_node);
 			}
 		}
 	} else {
